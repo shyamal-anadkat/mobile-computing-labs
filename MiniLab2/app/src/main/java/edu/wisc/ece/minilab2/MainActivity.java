@@ -34,17 +34,25 @@ public class MainActivity extends AppCompatActivity {
                 // non-UI thread for real-time display
                 t_thread = new Thread(new Runnable() {
                     public void run() {
-                        while(timer.isRunning()) {
-                            try {
-                                txt_view.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        txt_view.setText(timer.getElapsed());
-                                    }
-                                });
-                                Thread.sleep(10); //every 10 ms
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                        while(true) {
+                            if(timer.isRunning()) {
+                                try {
+                                    txt_view.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            txt_view.setText(timer.getElapsed());
+                                        }
+                                    });
+                                    Thread.sleep(10); //every 10 ms
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                try {
+                                    Thread.sleep(10);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }
@@ -63,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
                     timer.pause();
                 } else {    //resume the timer
                     timer.resume();
-                    t_thread.start();   //start the thread
                 }
             }
         });
