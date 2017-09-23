@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Minilab4task1</string>
+
+
+    <string name="hello">Hello Sensor!</string>
+    <string name="ui_shake_title">Shake to get a toast and to switch color</string>
+
+</resources>
