@@ -35,7 +35,6 @@ public class MotionsensorActivity extends Activity implements SensorEventListene
         texty = (TextView) findViewById(R.id.yval);
         textz = (TextView) findViewById(R.id.zval);
 
-
         view = findViewById(R.id.textView);
         view.setBackgroundColor(Color.BLUE);
 
@@ -52,7 +51,6 @@ public class MotionsensorActivity extends Activity implements SensorEventListene
             displayAccelerometer(event);
             checkShake(event);
         }
-
     }
 
     private void displayAccelerometer(SensorEvent event) {
@@ -100,9 +98,7 @@ public class MotionsensorActivity extends Activity implements SensorEventListene
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
     @Override
     protected void onResume() {
