@@ -33,11 +33,15 @@ public class ListViewLayoutActivity extends ListActivity {
         OnItemClickListener mListener = new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
+
                 // mini-lab task
+                //click one row of the list, the corresponding student’s name is
+                //removed from the array and the UI is updated
+                //display a toast telling “[the student’s name] is removed from the list!”
                 Toast.makeText
                         (ListViewLayoutActivity.this,
                                 FOLKS.get(position)
-                                        + " is removed from the list!", Toast.LENGTH_LONG).show();
+                                        + " is removed from the list!", Toast.LENGTH_SHORT).show();
                 FOLKS.remove(position);
                 mAdapter.notifyDataSetChanged();
             }
