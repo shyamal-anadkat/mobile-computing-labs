@@ -26,6 +26,7 @@ import org.json.JSONException;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 import android.app.Activity;
 import android.view.Menu;
@@ -38,31 +39,30 @@ import android.view.inputmethod.EditorInfo;
 
 
 public class MainActivity extends Activity {
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button storeButton = (Button)findViewById(R.id.button1);
+        Button storeButton = (Button) findViewById(R.id.button1);
         storeButton.setOnClickListener(new View.OnClickListener() {
                                            public void onClick(View v) {
                                                //Store
-                                               String[ ] aStr = new String[2] ;
-                                               aStr[0] = ((EditText)findViewById(R.id.fieldInKey)).getText().toString();
-                                               aStr[1] = ((EditText)findViewById(R.id.fieldInVal)).getText().toString();
+                                               String[] aStr = new String[2];
+                                               aStr[0] = ((EditText) findViewById(R.id.fieldInKey)).getText().toString();
+                                               aStr[1] = ((EditText) findViewById(R.id.fieldInVal)).getText().toString();
 
                                                //Query
-                                               String[ ] rStr = new String[1] ;
-                                               rStr[0] = ((EditText)findViewById(R.id.inQKey)).getText().toString();
+                                               String[] rStr = new String[1];
+                                               rStr[0] = ((EditText) findViewById(R.id.inQKey)).getText().toString();
 
-                                               if (!aStr[0].isEmpty() && !aStr[1].isEmpty())
-                                               {
+                                               if (!aStr[0].isEmpty() && !aStr[1].isEmpty()) {
                                                    //Execute store request
                                                    httpStore hS = new httpStore();
                                                    hS.execute(aStr);
-                                               }
-                                               else if (!rStr[0].isEmpty())
-                                               {
+                                               } else if (!rStr[0].isEmpty()) {
                                                    //Execute query
                                                    httpQuery hQ = new httpQuery();
                                                    hQ.execute(rStr);
@@ -74,12 +74,11 @@ public class MainActivity extends Activity {
     }
 
 
-
     protected class httpStore extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strs) {
             String reply = null;
-            String temp1=""; //capture acknowledgement from server, if any
+            String temp1 = ""; //capture acknowledgement from server, if any
 
             //Construct an HTTP POST
             HttpClient httpclient = new DefaultHttpClient();
@@ -105,8 +104,7 @@ public class MainActivity extends Activity {
                 // In this demo app, the server returns "Update" if the tag already exists;
                 // Otherwise, the server returns "New"
                 temp1 = EntityUtils.toString(response.getEntity());
-            }
-            catch (ClientProtocolException e) {
+            } catch (ClientProtocolException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 System.out.println("HTTP IO Exception.");
@@ -134,14 +132,13 @@ public class MainActivity extends Activity {
             if (res.equalsIgnoreCase("Store")) {
                 Toast.makeText(getApplicationContext(),
                         "Store new value!", Toast.LENGTH_SHORT).show();
-            }
-            else if(res.equalsIgnoreCase("Update")) {
+            } else if (res.equalsIgnoreCase("Update")) {
                 Toast.makeText(getApplicationContext(),
                         "Update existing value!", Toast.LENGTH_SHORT).show();
             }
             // Clean the text field
-            ((EditText)findViewById(R.id.fieldInKey)).setText("");
-            ((EditText)findViewById(R.id.fieldInVal)).setText("");
+            ((EditText) findViewById(R.id.fieldInKey)).setText("");
+            ((EditText) findViewById(R.id.fieldInVal)).setText("");
         }
     }
 
@@ -150,12 +147,68 @@ public class MainActivity extends Activity {
         @Override
         protected String doInBackground(String... strs) {
             // Your code here
+            String reply = null;
+            String temp1 = "";
 
-            return null;
+            //Construct an HTTP POST
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost getVal = new HttpPost("http://ece454f15lab7.appspot.com/getvalue");
+
+            // Values to be sent from android app to server
+            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+
+            // "tag" is the name of the text form on the webserver
+            nameValuePairs.add(new BasicNameValuePair("tag", strs[0]));
+
+            try {
+                UrlEncodedFormEntity httpEntity = new UrlEncodedFormEntity(nameValuePairs);
+                getVal.setEntity(httpEntity);
+
+                //Execute HTTP POST
+                HttpResponse response = httpclient.execute(getVal);
+                // Capture acknowledgement from server
+                // In this demo app, the server returns "Update" if the tag already exists;
+                // Otherwise, the server returns "New"
+                temp1 = EntityUtils.toString(response.getEntity());
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                System.out.println("HTTP IO Exception.");
+                e.printStackTrace();
+            }
+
+
+            // Decompose the server's acknowledgement into a JSON array
+            try {
+                JSONArray jsonArray = new JSONArray(temp1);
+                Log.v(TAG, jsonArray.toString());
+                reply = jsonArray.getString(2);
+
+            } catch (JSONException e) {
+                System.out.println("Error in JSON decoding");
+                e.printStackTrace();
+            }
+            return (reply == null || reply == "" || reply.isEmpty()) ? null : reply;
         }
+
         @Override
         protected void onPostExecute(String res) {
-            // Your code here
+
+            //update val-text if valid key
+            if (res != null) {
+                Toast.makeText(getApplicationContext(),
+                        "Found key!", Toast.LENGTH_SHORT).show();
+                TextView outVal = (TextView) findViewById(R.id.outVal);
+                outVal.setText(res);
+            }
+
+            //toast inform if invalid key
+            else {
+                Toast.makeText(getApplicationContext(),
+                        "No such key exists.", Toast.LENGTH_SHORT).show();
+            }
+            // Clean the text field
+            ((EditText) findViewById(R.id.inQKey)).setText("");
         }
     }
 }

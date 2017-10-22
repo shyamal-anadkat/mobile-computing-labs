@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="debug">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ece454minilab7Client/app/build/intermediates/pre-dexed/debug/internal_impl-23.0.1-4edf4d0898861e753913b3332a61bcb6c63d9f70.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ece454minilab7Client/app/build/intermediates/pre-dexed/debug/classes-1e50cffed56cefae4db60aade147645dd505d771.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ece454minilab7Client/app/build/intermediates/pre-dexed/debug/support-annotations-23.0.1-8e44f0aa8efab031dce04f7f57938e269fc8c032.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ece454minilab7Client/app/build/intermediates/pre-dexed/debug/classes-22c661cfc809f6c3a85a86c247ec37ebb8b3589b.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
