@@ -194,7 +194,7 @@ public class MainActivity extends Activity {
         @Override
         protected void onPostExecute(String res) {
 
-            //update val-text if valid key
+            //update val-textView if valid key
             if (res != null) {
                 Toast.makeText(getApplicationContext(),
                         "Found key!", Toast.LENGTH_SHORT).show();
@@ -202,11 +202,12 @@ public class MainActivity extends Activity {
                 outVal.setText(res);
             }
 
-            //toast inform if invalid key
+            //toast-warn if invalid key
             else {
                 Toast.makeText(getApplicationContext(),
                         "No such key exists.", Toast.LENGTH_SHORT).show();
             }
+
             // Clean the text field
             ((EditText) findViewById(R.id.inQKey)).setText("");
         }
